@@ -8,6 +8,12 @@ ENTRY(_start)
 
 SECTIONS
 {
+    .vectors : ALIGN(256)
+    {
+        _vectors_start = .;
+        KEEP(*(.vectors))
+    } > iram
+
     .text : ALIGN(4)
     {
         _text_start = .;
@@ -19,8 +25,10 @@ SECTIONS
 
     .rodata : ALIGN(4)
     {
+        _rodata_start = .;
         *(.rodata*)
-    } > iram
+        _rodata_end = .;
+    } > dram
 
     .data : ALIGN(4)
     {
@@ -30,7 +38,7 @@ SECTIONS
     } > dram AT > iram
     _data_load = LOADADDR(.data);
 
-    .bss (NOLOAD) : ALIGN(4)
+    .bss (NOLOAD) : ALIGN(16)
     {
         _bss_start = .;
         *(.bss*)

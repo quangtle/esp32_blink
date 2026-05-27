@@ -180,15 +180,8 @@ void vPortEndScheduler(void)
 
 BaseType_t xPortSysTickHandler(void)
 {
-    BaseType_t ret;
-
     TIMG1_INT_CLR = 1;
-
-    ret = xTaskIncrementTick();
-
-    portYIELD_FROM_ISR();
-
-    return ret;
+    return 0;
 }
 
 uint32_t xPortGetTickRateHz(void)

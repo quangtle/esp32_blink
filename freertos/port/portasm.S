@@ -40,7 +40,9 @@ _vector_table:
     j _start
     .space 29
     j _frxt_timer_int
-    .space 221
+    .space 29
+    j _frxt_timer_int
+    .space 189
 
 .section .text, "ax"
 
