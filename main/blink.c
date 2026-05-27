@@ -21,21 +21,22 @@ static inline uint32_t read_ccount(void)
 static void delay_ms(uint32_t ms)
 {
     uint32_t start = read_ccount();
-    uint32_t ticks = ms * 1000 * (read_ccount() > 200000000 ? 240U : 160U);
+    uint32_t ticks = ms * 1000 * 60;
     while ((read_ccount() - start) < ticks) {}
 }
 
 static void vBlinkTask(void *pvParameters)
 {
     (void)pvParameters;
+    int cycle = 0;
 
     for (;;) {
         GPIO_OUT_W1TS_REG = (1u << 2);
-        PUTC('+'); CRLF;
+        PUTC('0' + cycle); CRLF;
         delay_ms(500);
         GPIO_OUT_W1TC_REG = (1u << 2);
-        PUTC('-'); CRLF;
         delay_ms(500);
+        if (++cycle > 9) cycle = 0;
     }
 }
 
