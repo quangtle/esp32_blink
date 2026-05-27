@@ -54,9 +54,4 @@
 #define configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES  0
 #define configUSE_MINI_LIST_ITEM                1
 
-#ifndef __ASSEMBLER__
-extern void vPortAssertFailed(const char *file, int line);
-#endif
-#define configASSERT(x) if (!(x)) { vPortAssertFailed(__FILE__, __LINE__); }
-
 #endif

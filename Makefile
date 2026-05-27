@@ -4,7 +4,7 @@ AS        = $(TOOLCHAIN)-as
 LD        = $(TOOLCHAIN)-ld
 SIZE      = $(TOOLCHAIN)-size
 
-CFLAGS   = -Og -Wall -Wextra -ffunction-sections -fdata-sections -nostdlib -mlongcalls -mabi=call0 -Ifreertos/include -Ifreertos -Ifreertos/port
+CFLAGS   = -Os -Wall -Wextra -ffunction-sections -fdata-sections -nostdlib -mlongcalls -mabi=call0 -Ifreertos/include -Ifreertos -Ifreertos/port
 LDFLAGS  = -T esp32.ld -nostdlib --gc-sections
 
 BUILD_DIR = build

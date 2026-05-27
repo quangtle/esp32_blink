@@ -8,9 +8,6 @@
 #define IO_MUX_GPIO2_REG       (*(volatile uint32_t *)0x3FF49008)
 #define IO_MUX_PU              (1u << 8)
 
-#define PUTC(c) do { *(volatile uint32_t *)0x3FF40000 = (uint32_t)(c); } while(0)
-#define CRLF  do { PUTC('\r'); PUTC('\n'); } while(0)
-
 static inline uint32_t read_ccount(void)
 {
     uint32_t val;
@@ -32,7 +29,6 @@ static void vBlinkTask(void *pvParameters)
 
     for (;;) {
         GPIO_OUT_W1TS_REG = (1u << 2);
-        PUTC('0' + cycle); CRLF;
         delay_ms(500);
         GPIO_OUT_W1TC_REG = (1u << 2);
         delay_ms(500);
@@ -45,11 +41,8 @@ int main(void)
     IO_MUX_GPIO2_REG = IO_MUX_PU;
     GPIO_ENABLE_W1TS_REG = (1u << 2);
 
-    PUTC('S'); CRLF;
     xTaskCreate(vBlinkTask, NULL, configMINIMAL_STACK_SIZE, NULL, 1, NULL);
-    PUTC('O'); CRLF;
     vTaskStartScheduler();
-    PUTC('E'); CRLF;
 
     for (;;) {}
 }

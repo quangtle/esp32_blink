@@ -211,13 +211,6 @@ vPortYieldFromInt:
     s32i    a3, a2, 0
     ret
 
-.global vPortAssertFailed
-.type vPortAssertFailed, @function
-.align 4
-vPortAssertFailed:
-    waiti   0
-    j       vPortAssertFailed
-
 .section .bss
 .align 16
 .global port_switch_flag
