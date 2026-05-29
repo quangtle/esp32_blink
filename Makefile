@@ -26,7 +26,7 @@ BUILD_DIR = build
 
 FREERTOS_SRCS = freertos/tasks.c freertos/list.c freertos/queue.c freertos/heap_4.c freertos/port/port.c
 FREERTOS_ASMS = freertos/port/portasm.S
-SRCS     = main/blink.c modules/bt.c modules/uart.c $(FREERTOS_SRCS)
+SRCS     = main/blink.c $(FREERTOS_SRCS)
 ASMS     = main/startup.S $(FREERTOS_ASMS)
 OBJS     = $(SRCS:%c=$(BUILD_DIR)/%o) $(ASMS:%S=$(BUILD_DIR)/%o)
 TARGET   = blink
