@@ -4,6 +4,21 @@ AS        = $(TOOLCHAIN)-as
 LD        = $(TOOLCHAIN)-ld
 SIZE      = $(TOOLCHAIN)-size
 
+# Use python if available (Windows), otherwise use python3 (macOS/Linux)
+PYTHON ?= $(shell which python 2>/dev/null || which python3 2>/dev/null || echo python)
+
+# Auto-detect serial port across platforms
+PORT ?= $(shell \
+	if [ -e /dev/tty.usbserial* ] 2>/dev/null; then \
+		ls /dev/tty.usbserial* 2>/dev/null | head -1; \
+	elif [ -e /dev/ttyUSB* ] 2>/dev/null; then \
+		ls /dev/ttyUSB* 2>/dev/null | head -1; \
+	elif [ -e /dev/ttyACM* ] 2>/dev/null; then \
+		ls /dev/ttyACM* 2>/dev/null | head -1; \
+	else \
+		echo "COM4"; \
+	fi)
+
 CFLAGS   = -Os -Wall -Wextra -ffunction-sections -fdata-sections -nostdlib -mlongcalls -mabi=call0 -Ifreertos/include -Ifreertos -Ifreertos/port -Imodules
 LDFLAGS  = -T esp32.ld -nostdlib --gc-sections
 
@@ -36,10 +51,10 @@ $(ELF): $(OBJS) esp32.ld
 	$(LD) $(LDFLAGS) -o $@ $(OBJS)
 
 $(BIN): $(ELF)
-	python -m esptool --chip esp32 elf2image --flash-mode dio --flash-freq 40m --flash-size 4MB --min-rev-full 301 --max-rev-full 301 --dont-append-digest -o $@ $<
+	$(PYTHON) -m esptool --chip esp32 elf2image --flash_mode dio --flash_freq 40m --flash_size 4MB --min-rev-full 301 --max-rev-full 301 --dont-append-digest -o $@ $<
 
 flash: $(BIN)
-	python -m esptool --chip esp32 --port COM4 write-flash 0x1000 $<
+	$(PYTHON) -m esptool --chip esp32 --port $(PORT) write_flash 0x1000 $<
 
 clean:
 	rm -rf $(BUILD_DIR)
